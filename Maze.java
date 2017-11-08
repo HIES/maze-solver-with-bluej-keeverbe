@@ -32,12 +32,29 @@ public class Maze
 
     private boolean isValid(int row, int col)
     {
+        if (row < 0 || row > board.length || 
+        col <0 || col > board[0].length ||
+        board[row][col].isWall() == true || 
+        board[row][col].isVisited() == true )
+        {
         return false;
+       }
+       else 
+       {
+        return true;
+      }
     }
 
     private boolean isExit(int row, int col)
     {
+        if (row == board.length && col == board[0].length)
+        {
+            return true;
+        }
+        else
+        {
         return false;
+    }
     }
 
     public boolean findPath(int row, int col)
