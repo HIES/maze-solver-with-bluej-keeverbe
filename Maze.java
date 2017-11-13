@@ -2,6 +2,8 @@ public class Maze
 {
     private Cell[][] board;
     private final int DELAY = 200;
+    boolean complete = false;
+   
 
     public Maze(int rows, int cols, int[][] map){
         StdDraw.setXscale(0, cols);
@@ -32,8 +34,8 @@ public class Maze
 
     private boolean isValid(int row, int col)
     {
-        if (row < 0 || row > board.length || 
-        col <0 || col > board[0].length ||
+        if (row < 0 || row >= board.length || 
+        col <0 || col >= board[0].length ||
         board[row][col].isWall() == true || 
         board[row][col].isVisited() == true )
         {
@@ -47,7 +49,7 @@ public class Maze
 
     private boolean isExit(int row, int col)
     {
-        if (row == board.length && col == board[0].length)
+        if (row == board.length-1 && col == board[0].length-1)
         {
             return true;
         }
@@ -58,8 +60,68 @@ public class Maze
     }
 
     public boolean findPath(int row, int col)
+    {   
+        if (isValid(row, col))
+            {  
+                board[row][col].visitCell();
+                draw();
+                StdDraw.pause(30);
+                if (isExit(row, col))
+                {
+                    complete = true;
+                }
+                else if (!complete)
+                {
+                    if (isValid(row+1, col))
+                    {
+                      findPath(row+1, col);
+                    }
+                    if (isValid(row, col+1))
+                    {
+                      findPath(row, col+1);
+                    }
+                    if (isValid(row-1, col))
+                    {
+                      findPath(row-1, col);
+                    }
+                    if (isValid(row, col-1))
+                    {
+                      findPath(row, col-1);
+                    }
+                }
+                if (complete)
+                {
+                    board[row][col].becomePath();
+                    draw();
+                    StdDraw.pause(30);
+                }
+            }  
+        return complete;
+    }
+    private int[][] randomMaze(int rows, int cols)
     {
-        return false;
+        int[][] randomMaze = new int[rows][cols];
+        double p = .4;
+            for (int i = 0; i < rows; i ++)
+        {
+            for (int j = 0; j < cols; j ++)
+        {
+            double randomNum = Math.random();
+            if ( (i == 0 || i == rows || j == 0 || j == cols) && !(i == 0 && j ==0))
+            {
+                randomMaze[i][j] = 0;
+            }
+            else if (randomNum < p)
+            {
+                randomMaze[i][j] = 0;
+            }
+            else
+            {
+                randomMaze[i][j] = 1;
+            }
+        }
+        }
+        return randomMaze;
     }
 
     public static void main(String[] args) {
@@ -74,9 +136,21 @@ public class Maze
                         {0,1,1,0,1,1,0,1,1,0},
                         {0,1,1,0,1,1,0,1,1,0},
                         {0,0,0,0,0,0,0,0,1,1}};
+                        
+         int[][] maze2 = {{1,1,0,0,0,0,0,0,0,0},
+                        {0,1,1,1,1,0,1,1,1,0},
+                        {0,1,1,1,1,0,1,1,0,0},
+                        {0,1,0,1,1,1,1,1,1,0},
+                        {0,0,0,0,0,0,0,1,1,0},
+                        {0,1,1,1,1,1,0,1,1,0},
+                        {0,1,1,0,0,1,0,0,1,0},
+                        {0,1,1,0,1,1,0,1,1,0},
+                        {0,1,1,0,1,1,0,1,1,0},
+                        {0,0,0,0,0,0,0,0,1,1}};
         Maze geerid = new Maze(maze.length, maze[0].length, maze);
         geerid.draw();
         geerid.findPath(0, 0);
         geerid.draw();
+     
     }
 }
