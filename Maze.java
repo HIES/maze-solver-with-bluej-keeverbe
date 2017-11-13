@@ -61,8 +61,10 @@ public class Maze
 
     public boolean findPath(int row, int col)
     {   
-        if (isValid(row, col))
-            {  
+        if(isValid(row, col))
+            {
+               if (!complete)
+                    {  
                 board[row][col].visitCell();
                 draw();
                 StdDraw.pause(30);
@@ -70,33 +72,23 @@ public class Maze
                 {
                     complete = true;
                 }
-                else if (!complete)
+                else 
                 {
-                    if (isValid(row+1, col))
-                    {
                       findPath(row+1, col);
-                    }
-                    if (isValid(row, col+1))
-                    {
                       findPath(row, col+1);
-                    }
-                    if (isValid(row-1, col))
-                    {
                       findPath(row-1, col);
-                    }
-                    if (isValid(row, col-1))
-                    {
                       findPath(row, col-1);
-                    }
                 }
                 if (complete)
-                {
+                    {
                     board[row][col].becomePath();
                     draw();
                     StdDraw.pause(30);
                 }
             }  
+        }
         return complete;
+        
     }
     private int[][] randomMaze(int rows, int cols)
     {
